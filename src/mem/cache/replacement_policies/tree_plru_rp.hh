@@ -180,6 +180,7 @@ class TreePLRURP : public BaseReplacementPolicy
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                      override;
 
+    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const override;
     /**
      * Reset replacement data. Used when an entry is inserted. Provides the
      * same functionality as touch().

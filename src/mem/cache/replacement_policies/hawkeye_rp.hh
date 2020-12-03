@@ -28,51 +28,69 @@
 
 /**
  * @file
- * Declaration of a Least Frequently Used replacement policy.
- * The victim is chosen using the reference frequency. The least referenced
- * entry is always chosen to be evicted, regardless of the amount of times
- * it has been touched, or how long has passed since its last touch.
+ * Declaration of a Least Recently Used replacement policy.
+ * The victim is chosen using the last touch timestamp.
  */
 
-#ifndef __MEM_CACHE_REPLACEMENT_POLICIES_LFU_RP_HH__
-#define __MEM_CACHE_REPLACEMENT_POLICIES_LFU_RP_HH__
+#ifndef __MEM_CACHE_REPLACEMENT_POLICIES_HAWKEYE_RP_HH__
+#define __MEM_CACHE_REPLACEMENT_POLICIES_HAWKEYE_RP_HH__
 
 #include "mem/cache/replacement_policies/base.hh"
 
-struct LFURPParams;
+struct HAWKEYERPParams;
 
-class LFURP : public BaseReplacementPolicy
+class HAWKEYERP : public BaseReplacementPolicy
 {
   protected:
-    /** LFU-specific implementation of replacement data. */
-    struct LFUReplData : ReplacementData
+    /** HAWKEYE-specific implementation of replacement data. */
+    struct HAWKEYEReplData : ReplacementData
     {
-        /** Number of references to this entry since it was reset. */
-        unsigned refCount;
+        /** Tick on which the entry was last touched. */
+        unsigned rrip;
+  
+        bool OPT_decision;
+
+        bool firstAccess;
+        
+        bool cacheFriendly;
+
+        Addr hashedPC;
 
         /**
          * Default constructor. Invalidate data.
          */
-        LFUReplData() : refCount(0) {}
+        HAWKEYEReplData() : rrip(0), OPT_decision(false), firstAccess(false), 
+                            cacheFriendly(false), hashedPC(0) {}
     };
 
   public:
     /** Convenience typedef. */
-    typedef LFURPParams Params;
+    typedef HAWKEYERPParams Params;
 
     /**
      * Construct and initiliaze this replacement policy.
      */
-    LFURP(const Params *p);
+    HAWKEYERP(const Params *p);
 
     /**
      * Destructor.
      */
-    ~LFURP() {}
+    ~HAWKEYERP() {}
+
+
+    // OPTgen implementation
+
+    // Fixed values for LLC
+    // num_sets = 2048
+    // num_ways = 16
+
+    //Addr AccessHistory[2048][8*16]; 
+    //unsigned OccupancyVector[2048][8*16]; 
+    //unsigned head_ptr[2048];    
 
     /**
      * Invalidate replacement data to set it as the next probable victim.
-     * Clear the number of references.
+     * Sets its last touch tick as the starting tick.
      *
      * @param replacement_data Replacement data to be invalidated.
      */
@@ -81,17 +99,19 @@ class LFURP : public BaseReplacementPolicy
 
     /**
      * Touch an entry to update its replacement data.
-     * Increase number of references.
+     * Sets its last touch tick as the current tick.
      *
      * @param replacement_data Replacement data to be touched.
      */
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
-                                                                     override;
-
-    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const override;
+                                                                    override;
+    // RE
+    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, 
+                                             Addr addr, Addr tag, uint32_t set 
+                                                            ) const override;
     /**
      * Reset replacement data. Used when an entry is inserted.
-     * Reset number of references.
+     * Sets its last touch tick as the current tick.
      *
      * @param replacement_data Replacement data to be reset.
      */
@@ -99,9 +119,9 @@ class LFURP : public BaseReplacementPolicy
                                                                      override;
 
     /**
-     * Find replacement victim using reference frequency.
+     * Find replacement victim using HAWKEYE timestamps.
      *
-     * @param cands Replacement candidates, selected by indexing policy.
+     * @param candidates Replacement candidates, selected by indexing policy.
      * @return Replacement entry to be replaced.
      */
     ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
@@ -115,4 +135,4 @@ class LFURP : public BaseReplacementPolicy
     std::shared_ptr<ReplacementData> instantiateEntry() override;
 };
 
-#endif // __MEM_CACHE_REPLACEMENT_POLICIES_LFU_RP_HH__
+#endif // __MEM_CACHE_REPLACEMENT_POLICIES_HAWKEYE_RP_HH__

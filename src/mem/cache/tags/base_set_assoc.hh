@@ -50,6 +50,7 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <cassert>
 
 #include "base/logging.hh"
 #include "base/types.hh"
@@ -143,8 +144,13 @@ class BaseSetAssoc : public BaseTags
             // Update number of references to accessed block
             blk->refCount++;
 
+            // RE: Hawkeye Support
+            Addr tag = blk->tag;
+            uint32_t set = blk->getSet();
+
             // Update replacement data of accessed block
-            replacementPolicy->touch(blk->replacementData);
+            replacementPolicy->update_state(blk->replacementData, addr, tag, set); // predict during hit
+	    replacementPolicy->touch(blk->replacementData);
         }
 
         // The tag lookup latency is the same for a hit or a miss
@@ -171,7 +177,6 @@ class BaseSetAssoc : public BaseTags
         const std::vector<ReplaceableEntry*> entries =
             indexingPolicy->getPossibleEntries(addr);
 
-        // Choose replacement victim from replacement candidates
         CacheBlk* victim = static_cast<CacheBlk*>(replacementPolicy->getVictim(
                                 entries));
 
@@ -194,7 +199,12 @@ class BaseSetAssoc : public BaseTags
 
         // Increment tag counter
         stats.tagsInUse++;
-
+        // RE: Hawkeye Support
+        Addr addr = pkt->getAddr();
+        Addr tag = blk->tag;
+        uint32_t set = blk->getSet();
+        
+        replacementPolicy->update_state(blk->replacementData, addr, tag, set); // predict during miss
         // Update replacement policy
         replacementPolicy->reset(blk->replacementData);
     }

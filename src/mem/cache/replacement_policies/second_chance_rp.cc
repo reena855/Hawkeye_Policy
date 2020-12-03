@@ -70,6 +70,16 @@ SecondChanceRP::touch(const std::shared_ptr<ReplacementData>&
         replacement_data)->hasSecondChance = true;
 }
 
+
+void 
+SecondChanceRP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 SecondChanceRP::reset(const std::shared_ptr<ReplacementData>&
                                                     replacement_data) const

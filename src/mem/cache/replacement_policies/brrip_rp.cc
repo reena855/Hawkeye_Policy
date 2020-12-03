@@ -40,6 +40,7 @@ BRRIPRP::BRRIPRP(const Params *p)
       numRRPVBits(p->num_bits), hitPriority(p->hit_priority), btp(p->btp)
 {
     fatal_if(numRRPVBits <= 0, "There should be at least one bit per RRPV.\n");
+
 }
 
 void
@@ -68,6 +69,14 @@ BRRIPRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         casted_replacement_data->rrpv--;
     }
 }
+
+void 
+BRRIPRP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
 
 void
 BRRIPRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const

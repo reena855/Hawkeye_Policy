@@ -53,6 +53,11 @@ class LRURP(BaseReplacementPolicy):
     cxx_class = 'LRURP'
     cxx_header = "mem/cache/replacement_policies/lru_rp.hh"
 
+class HAWKEYERP(BaseReplacementPolicy):
+    type = 'HAWKEYERP'
+    cxx_class = 'HAWKEYERP'
+    cxx_header = "mem/cache/replacement_policies/hawkeye_rp.hh"
+
 class BIPRP(LRURP):
     type = 'BIPRP'
     cxx_class = 'BIPRP'

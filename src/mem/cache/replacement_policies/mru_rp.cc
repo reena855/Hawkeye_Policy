@@ -55,6 +55,16 @@ MRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         replacement_data)->lastTouchTick = curTick();
 }
 
+
+void 
+MRURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 MRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {

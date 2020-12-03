@@ -53,6 +53,16 @@ LFURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     std::static_pointer_cast<LFUReplData>(replacement_data)->refCount++;
 }
 
+
+void 
+LFURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 LFURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {

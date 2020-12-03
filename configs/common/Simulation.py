@@ -269,6 +269,7 @@ def scriptCheckpoints(options, maxtick, cptdir):
 
 def benchCheckpoints(options, maxtick, cptdir):
     exit_event = m5.simulate(maxtick - m5.curTick())
+    print ("RE: Simulation Ended")
     exit_cause = exit_event.getCause()
 
     num_checkpoints = 0
@@ -725,6 +726,7 @@ def run(options, root, testsys, cpu_class):
             exit_event = repeatSwitch(testsys, repeat_switch_cpu_list,
                                       maxtick, options.repeat_switch)
         else:
+            print ("\n\n RE: Starting Simulation \n\n")
             exit_event = benchCheckpoints(options, maxtick, cptdir)
 
     print('Exiting @ tick %i because %s' %

@@ -66,6 +66,14 @@ WeightedLRUPolicy::touch(const std::shared_ptr<ReplacementData>&
                                                   last_occ_ptr = occupancy;
 }
 
+void 
+WeightedLRUPolicy::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
 ReplaceableEntry*
 WeightedLRUPolicy::getVictim(const ReplacementCandidates& candidates) const
 {

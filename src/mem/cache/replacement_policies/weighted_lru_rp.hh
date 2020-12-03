@@ -83,6 +83,7 @@ class WeightedLRUPolicy : public BaseReplacementPolicy
     void touch(const std::shared_ptr<ReplacementData>& replacement_data,
                                         int occupancy) const;
 
+    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const override;
     /**
      * Reset replacement data. Used when an entry is inserted.
      * Sets its last touch tick as the current tick.

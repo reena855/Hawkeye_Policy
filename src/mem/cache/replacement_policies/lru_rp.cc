@@ -55,6 +55,16 @@ LRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         replacement_data)->lastTouchTick = curTick();
 }
 
+
+void 
+LRURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 LRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {

@@ -155,6 +155,17 @@ const
     } while (tree_index != 0);
 }
 
+
+void 
+TreePLRURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
+
 void
 TreePLRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
 const

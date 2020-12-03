@@ -77,6 +77,10 @@ class BaseReplacementPolicy : public SimObject
     virtual void touch(const std::shared_ptr<ReplacementData>&
                                                 replacement_data) const = 0;
 
+    // RE
+    virtual void update_state(const std::shared_ptr<ReplacementData>& replacement_data, 
+                                                Addr addr, Addr tag, 
+                                                uint32_t set) const = 0;
     /**
      * Reset replacement data. Used when it's holder is inserted/validated.
      *

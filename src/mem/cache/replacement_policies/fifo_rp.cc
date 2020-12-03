@@ -53,6 +53,16 @@ FIFORP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     // A touch does not modify the insertion tick
 }
 
+
+void 
+FIFORP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 FIFORP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {

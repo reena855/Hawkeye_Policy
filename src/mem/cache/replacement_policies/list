@@ -1,0 +1,100 @@
+base.hh:    virtual void invalidate(const std::shared_ptr<ReplacementData>&
+base.hh:    virtual void touch(const std::shared_ptr<ReplacementData>&
+base.hh:    virtual void reset(const std::shared_ptr<ReplacementData>&
+base.hh:    virtual std::shared_ptr<ReplacementData> instantiateEntry() = 0;
+bip_rp.cc:BIPRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+bip_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+brrip_rp.cc:BRRIPRP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+brrip_rp.cc:BRRIPRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+brrip_rp.cc:BRRIPRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+brrip_rp.cc:std::shared_ptr<ReplacementData>
+brrip_rp.cc:    return std::shared_ptr<ReplacementData>(new BRRIPReplData(numRRPVBits));
+brrip_rp.hh:    struct BRRIPReplData : ReplacementData
+brrip_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+brrip_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+brrip_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+brrip_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+fifo_rp.cc:FIFORP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+fifo_rp.cc:FIFORP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+fifo_rp.cc:FIFORP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+fifo_rp.cc:std::shared_ptr<ReplacementData>
+fifo_rp.cc:    return std::shared_ptr<ReplacementData>(new FIFOReplData());
+fifo_rp.hh:    struct FIFOReplData : ReplacementData
+fifo_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+fifo_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+fifo_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+fifo_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+lfu_rp.cc:LFURP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+lfu_rp.cc:LFURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+lfu_rp.cc:LFURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+lfu_rp.cc:std::shared_ptr<ReplacementData>
+lfu_rp.cc:    return std::shared_ptr<ReplacementData>(new LFUReplData());
+lfu_rp.hh:    struct LFUReplData : ReplacementData
+lfu_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+lfu_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+lfu_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+lfu_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+lru_rp.cc:LRURP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+lru_rp.cc:LRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+lru_rp.cc:LRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+lru_rp.cc:std::shared_ptr<ReplacementData>
+lru_rp.cc:    return std::shared_ptr<ReplacementData>(new LRUReplData());
+lru_rp.hh:    struct LRUReplData : ReplacementData
+lru_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+lru_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+lru_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+lru_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+mru_rp.cc:MRURP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+mru_rp.cc:MRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+mru_rp.cc:MRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+mru_rp.cc:std::shared_ptr<ReplacementData>
+mru_rp.cc:    return std::shared_ptr<ReplacementData>(new MRUReplData());
+mru_rp.hh:    struct MRUReplData : ReplacementData
+mru_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+mru_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+mru_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+mru_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+random_rp.cc:RandomRP::invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+random_rp.cc:RandomRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+random_rp.cc:RandomRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+random_rp.cc:std::shared_ptr<ReplacementData>
+random_rp.cc:    return std::shared_ptr<ReplacementData>(new RandomReplData());
+random_rp.hh:    struct RandomReplData : ReplacementData
+random_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+random_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+random_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+random_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+replaceable_entry.hh:struct ReplacementData {};
+replaceable_entry.hh:    std::shared_ptr<ReplacementData> replacementData;
+second_chance_rp.cc:    const std::shared_ptr<ReplacementData>& replacement_data) const
+second_chance_rp.cc:SecondChanceRP::touch(const std::shared_ptr<ReplacementData>&
+second_chance_rp.cc:SecondChanceRP::reset(const std::shared_ptr<ReplacementData>&
+second_chance_rp.cc:std::shared_ptr<ReplacementData>
+second_chance_rp.cc:    return std::shared_ptr<ReplacementData>(new SecondChanceReplData());
+second_chance_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+second_chance_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+second_chance_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+second_chance_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+tree_plru_rp.cc:    const std::shared_ptr<ReplacementData>& replacement_data) const
+tree_plru_rp.cc:TreePLRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data)
+tree_plru_rp.cc:TreePLRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data)
+tree_plru_rp.cc:std::shared_ptr<ReplacementData>
+tree_plru_rp.cc:    return std::shared_ptr<ReplacementData>(treePLRUReplData);
+tree_plru_rp.hh:    struct TreePLRUReplData : ReplacementData
+tree_plru_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+tree_plru_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
+tree_plru_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+tree_plru_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;
+weighted_lru_rp.cc:WeightedLRUPolicy::touch(const std::shared_ptr<ReplacementData>&
+weighted_lru_rp.cc:WeightedLRUPolicy::touch(const std::shared_ptr<ReplacementData>&
+weighted_lru_rp.cc:std::shared_ptr<ReplacementData>
+weighted_lru_rp.cc:    return std::shared_ptr<ReplacementData>(new WeightedLRUReplData);
+weighted_lru_rp.cc:WeightedLRUPolicy::reset(const std::shared_ptr<ReplacementData>&
+weighted_lru_rp.cc:WeightedLRUPolicy::invalidate(const std::shared_ptr<ReplacementData>&
+weighted_lru_rp.hh:    struct WeightedLRUReplData : ReplacementData
+weighted_lru_rp.hh:        WeightedLRUReplData() : ReplacementData(),
+weighted_lru_rp.hh:    void invalidate(const std::shared_ptr<ReplacementData>& replacement_data)
+weighted_lru_rp.hh:    void touch(const std::shared_ptr<ReplacementData>&
+weighted_lru_rp.hh:    void touch(const std::shared_ptr<ReplacementData>& replacement_data,
+weighted_lru_rp.hh:    void reset(const std::shared_ptr<ReplacementData>& replacement_data) const
+weighted_lru_rp.hh:    std::shared_ptr<ReplacementData> instantiateEntry() override;

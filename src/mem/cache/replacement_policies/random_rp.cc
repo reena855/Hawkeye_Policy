@@ -53,6 +53,15 @@ RandomRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
 {
 }
 
+void 
+RandomRP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+{
+
+// Do Nothing  
+
+};
+
+
 void
 RandomRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
 {
