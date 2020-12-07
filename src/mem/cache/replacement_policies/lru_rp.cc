@@ -31,6 +31,7 @@
 #include <cassert>
 #include <memory>
 
+#include "debug/CacheRepl.hh"
 #include "params/LRURP.hh"
 
 LRURP::LRURP(const Params *p)
@@ -55,14 +56,22 @@ LRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         replacement_data)->lastTouchTick = curTick();
 }
 
-
 void 
-LRURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+LRURP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+LRURP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
+
 
 
 void

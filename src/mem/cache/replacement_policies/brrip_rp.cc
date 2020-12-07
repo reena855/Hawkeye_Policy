@@ -71,12 +71,20 @@ BRRIPRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
 }
 
 void 
-BRRIPRP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+BRRIPRP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+BRRIPRP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
 
 void
 BRRIPRP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const

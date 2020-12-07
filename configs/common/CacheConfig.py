@@ -104,6 +104,12 @@ def config_cache(options, system):
         system.tol3bus = L2XBar(clk_domain = system.cpu_clk_domain)
         system.l3.cpu_side = system.tol3bus.master
         system.l3.mem_side = system.membus.slave
+        if (options.l3_replacement_policy == "HAWKEYE"):
+            system.l3.replacement_policy = HAWKEYERP();
+
+        elif (options.l3_replacement_policy == "LRU"):
+            system.l3.replacement_policy = LRURP();
+    
     
 
     if options.l2cache and options.elastic_trace_en:

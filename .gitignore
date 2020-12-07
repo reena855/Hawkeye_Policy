@@ -7,6 +7,10 @@ cscope.out
 *~
 .*.swp
 .*.swo
+Obselete
+SimPoint*
+Results/Simpoint*
+Results/Checkpoint*
 m5out
 /src/doxygen/html
 /ext/dramsim2/DRAMSim2

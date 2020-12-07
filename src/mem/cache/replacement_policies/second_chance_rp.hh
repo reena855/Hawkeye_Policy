@@ -102,7 +102,9 @@ class SecondChanceRP : public FIFORP
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                      override;
 
-    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const override;
+    void update_predictor(Addr addr) const override;
+    void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+							Addr addr) const override;
     /**
      * Reset replacement data. Used when an entry is inserted or re-inserted
      * in the queue.

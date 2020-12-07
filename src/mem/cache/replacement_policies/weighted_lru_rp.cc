@@ -67,12 +67,20 @@ WeightedLRUPolicy::touch(const std::shared_ptr<ReplacementData>&
 }
 
 void 
-WeightedLRUPolicy::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+WeightedLRUPolicy::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+WeightedLRUPolicy::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
 
 ReplaceableEntry*
 WeightedLRUPolicy::getVictim(const ReplacementCandidates& candidates) const

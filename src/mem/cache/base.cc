@@ -1039,6 +1039,9 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
 
     // Access block in the tags
     Cycles tag_latency(0);
+
+    DPRINTF(CacheRepl, "Access from address: %s\n", pkt->getAddr());
+
     blk = tags->accessBlock(pkt->getAddr(), pkt->isSecure(), tag_latency);
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),

@@ -78,9 +78,9 @@ class BaseReplacementPolicy : public SimObject
                                                 replacement_data) const = 0;
 
     // RE
-    virtual void update_state(const std::shared_ptr<ReplacementData>& replacement_data, 
-                                                Addr addr, Addr tag, 
-                                                uint32_t set) const = 0;
+    virtual void update_predictor(Addr addr) const = 0;
+    virtual void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+							Addr addr) const = 0;
     /**
      * Reset replacement data. Used when it's holder is inserted/validated.
      *

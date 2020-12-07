@@ -59,7 +59,7 @@ class HAWKEYERP : public BaseReplacementPolicy
         /**
          * Default constructor. Invalidate data.
          */
-        HAWKEYEReplData() : rrip(0), OPT_decision(false), firstAccess(false), 
+        HAWKEYEReplData() : rrip(7), OPT_decision(false), firstAccess(false), 
                             cacheFriendly(false), hashedPC(0) {}
     };
 
@@ -106,9 +106,9 @@ class HAWKEYERP : public BaseReplacementPolicy
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                     override;
     // RE
-    void update_state(const std::shared_ptr<ReplacementData>& replacement_data, 
-                                             Addr addr, Addr tag, uint32_t set 
-                                                            ) const override;
+    void update_predictor(Addr addr) const override;
+    void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+							Addr addr) const override;
     /**
      * Reset replacement data. Used when an entry is inserted.
      * Sets its last touch tick as the current tick.

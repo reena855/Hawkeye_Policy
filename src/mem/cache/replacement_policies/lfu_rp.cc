@@ -54,13 +54,22 @@ LFURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
 }
 
 
+
 void 
-LFURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+LFURP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+LFURP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
 
 
 void

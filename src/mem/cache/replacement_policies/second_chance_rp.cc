@@ -70,14 +70,21 @@ SecondChanceRP::touch(const std::shared_ptr<ReplacementData>&
         replacement_data)->hasSecondChance = true;
 }
 
-
 void 
-SecondChanceRP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+SecondChanceRP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+SecondChanceRP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
 
 
 void

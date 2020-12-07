@@ -1,0 +1,1 @@
+./build/X86/gem5.opt configs/spec2k6/run.py -b sphinx3 --cpu-type=NonCachingSimpleCPU --simpoint-profile --simpoint-interval=250000000

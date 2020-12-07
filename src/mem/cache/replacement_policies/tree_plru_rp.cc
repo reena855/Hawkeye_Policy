@@ -155,14 +155,22 @@ const
     } while (tree_index != 0);
 }
 
-
 void 
-TreePLRURP::update_state(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr, Addr tag, uint32_t set) const
+TreePLRURP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
 
-};
+}
+
+void
+TreePLRURP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
+{
+
+// Do Nothing  
+
+}
+
 
 
 

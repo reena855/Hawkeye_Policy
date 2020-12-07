@@ -52,6 +52,7 @@
 #include <vector>
 #include <cassert>
 
+#include "debug/CacheRepl.hh"
 #include "base/logging.hh"
 #include "base/types.hh"
 #include "mem/cache/base.hh"
@@ -138,6 +139,9 @@ class BaseSetAssoc : public BaseTags
         } else {
             stats.dataAccesses += allocAssoc;
         }
+            
+
+        replacementPolicy->update_predictor(addr); // update during hit and miss
 
         // If a cache hit
         if (blk != nullptr) {
@@ -145,12 +149,11 @@ class BaseSetAssoc : public BaseTags
             blk->refCount++;
 
             // RE: Hawkeye Support
-            Addr tag = blk->tag;
-            uint32_t set = blk->getSet();
-
             // Update replacement data of accessed block
-            replacementPolicy->update_state(blk->replacementData, addr, tag, set); // predict during hit
+            replacementPolicy->predict(blk->replacementData, addr); // predict during hit
 	    replacementPolicy->touch(blk->replacementData);
+            DPRINTF(CacheRepl, "Access from address %s is a hit. Updating replacement data"
+                    "\n", addr);
         }
 
         // The tag lookup latency is the same for a hit or a miss
@@ -201,10 +204,11 @@ class BaseSetAssoc : public BaseTags
         stats.tagsInUse++;
         // RE: Hawkeye Support
         Addr addr = pkt->getAddr();
-        Addr tag = blk->tag;
-        uint32_t set = blk->getSet();
         
-        replacementPolicy->update_state(blk->replacementData, addr, tag, set); // predict during miss
+        DPRINTF(CacheRepl, "Access from address %s is a miss. Updating replacement data"
+                "\n", addr);
+        
+        replacementPolicy->predict(blk->replacementData, addr); // predict during miss
         // Update replacement policy
         replacementPolicy->reset(blk->replacementData);
     }
