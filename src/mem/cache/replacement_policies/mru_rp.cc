@@ -55,22 +55,34 @@ MRURP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         replacement_data)->lastTouchTick = curTick();
 }
 
-void 
+unsigned 
 MRURP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 MRURP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
-
+return false;
 }
 
+void
+MRURP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+MRURP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
+}
 
 void
 MRURP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const

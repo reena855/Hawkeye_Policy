@@ -1737,7 +1737,7 @@
                     "size": 64
                 }, 
                 "simpoint_start_insts": [], 
-                "max_insts_any_thread": 1000000000, 
+                "max_insts_any_thread": 1, 
                 "simulate_inst_stalls": false, 
                 "progress_interval": 0, 
                 "branchPred": null, 

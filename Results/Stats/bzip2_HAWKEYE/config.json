@@ -1678,7 +1678,7 @@
                         "maxStackSize": 67108864, 
                         "ppid": 0, 
                         "type": "Process", 
-                        "cwd": "/home/consus/a/elangovr/CourseWork/ECE565/Project/gem5", 
+                        "cwd": "/home/consus/a/elangovr/CourseWork/ECE565/Project/gem5_parallel", 
                         "pgid": 100, 
                         "simpoint": 0, 
                         "euid": 100, 

@@ -140,8 +140,23 @@ class BaseSetAssoc : public BaseTags
             stats.dataAccesses += allocAssoc;
         }
             
+        // RE: Hawkeye support
+        
+        unsigned OPTgen_out;
 
-        replacementPolicy->update_predictor(addr); // update during hit and miss
+        OPTgen_out = replacementPolicy->update_predictor(addr); // update during hit and miss
+
+	if (OPTgen_out == 0) {
+            stats.OPT_miss++;
+        }
+
+	else if (OPTgen_out == 1) {
+	    stats.OPT_hit++;
+	}
+
+	else {
+	    stats.OPT_nan++;
+	}
 
         // If a cache hit
         if (blk != nullptr) {
@@ -149,9 +164,18 @@ class BaseSetAssoc : public BaseTags
             blk->refCount++;
 
             // RE: Hawkeye Support
+            bool cacheFriendly;
             // Update replacement data of accessed block
-            replacementPolicy->predict(blk->replacementData, addr); // predict during hit
+            cacheFriendly = replacementPolicy->predict(blk->replacementData, addr); // predict during hit
 	    replacementPolicy->touch(blk->replacementData);
+
+            if (cacheFriendly) {
+		stats.cacheFriendly++;
+	    }
+            else {
+		stats.cacheAverse++;
+	    }
+
             DPRINTF(CacheRepl, "Access from address %s is a hit. Updating replacement data"
                     "\n", addr);
         }
@@ -183,6 +207,18 @@ class BaseSetAssoc : public BaseTags
         CacheBlk* victim = static_cast<CacheBlk*>(replacementPolicy->getVictim(
                                 entries));
 
+	// RE: Hawkeye Suport
+        bool victim_cacheFriendly;
+        victim_cacheFriendly = replacementPolicy->victim_check(victim->replacementData);
+
+        if (victim_cacheFriendly){
+		stats.victim_cacheFriendly++;
+        }
+        else {
+		stats.victim_cacheAverse++;
+        }
+
+
         // There is only one eviction for this replacement
         evict_blks.push_back(victim);
 
@@ -204,12 +240,28 @@ class BaseSetAssoc : public BaseTags
         stats.tagsInUse++;
         // RE: Hawkeye Support
         Addr addr = pkt->getAddr();
-        
+        bool cacheFriendly;        
+
         DPRINTF(CacheRepl, "Access from address %s is a miss. Updating replacement data"
                 "\n", addr);
         
-        replacementPolicy->predict(blk->replacementData, addr); // predict during miss
-        // Update replacement policy
+        cacheFriendly = replacementPolicy->predict(blk->replacementData, addr); // predict during miss
+        if (cacheFriendly) {
+	    stats.cacheFriendly++;
+	}
+        else {
+	    stats.cacheAverse++;
+	}
+
+        // Age cache friendly blocks    
+        const std::vector<ReplaceableEntry*> entries =
+            indexingPolicy->getPossibleEntries(addr);
+
+        if (cacheFriendly) { // age when the new block is cache friendly 
+	    replacementPolicy->age(entries);
+        }
+
+        // Reset RRIP of the newly inserted block
         replacementPolicy->reset(blk->replacementData);
     }
 

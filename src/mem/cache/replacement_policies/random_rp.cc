@@ -53,20 +53,33 @@ RandomRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
 {
 }
 
-void 
+unsigned 
 RandomRP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 RandomRP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
+return false;
+}
 
+void
+RandomRP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+RandomRP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
 }
 
 void

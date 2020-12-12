@@ -47,6 +47,7 @@
 #include "mem/cache/tags/indexing_policies/base.hh"
 
 #include <cstdlib>
+#include "debug/CacheRepl.hh"
 
 #include "base/intmath.hh"
 #include "base/logging.hh"
@@ -61,6 +62,18 @@ BaseIndexingPolicy::BaseIndexingPolicy(const Params *p)
     fatal_if(!isPowerOf2(numSets), "# of sets must be non-zero and a power " \
              "of 2");
     fatal_if(assoc <= 0, "associativity must be greater than zero");
+
+    DPRINTF(CacheRepl, "HAWKEYE RP: checking numSets: %s\n",
+		numSets);
+
+    DPRINTF(CacheRepl, "HAWKEYE RP: checking tagShift: %s\n",
+		tagShift);
+    
+    DPRINTF(CacheRepl, "HAWKEYE RP: checking setShift: %s\n",
+		setShift);
+    
+    DPRINTF(CacheRepl, "HAWKEYE RP: checking setMask: %s\n",
+		setMask);
 
     // Make space for the entries
     for (uint32_t i = 0; i < numSets; ++i) {
@@ -81,7 +94,7 @@ BaseIndexingPolicy::setEntry(ReplaceableEntry* entry, const uint64_t index)
     const std::lldiv_t div_result = std::div((long long)index, assoc);
     const uint32_t set = div_result.quot;
     const uint32_t way = div_result.rem;
-
+    
     // Sanity check
     assert(set < numSets);
 

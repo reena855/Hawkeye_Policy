@@ -36,6 +36,8 @@
 #define __MEM_CACHE_REPLACEMENT_POLICIES_HAWKEYE_RP_HH__
 
 #include "mem/cache/replacement_policies/base.hh"
+#include "base/statistics.hh"
+
 
 struct HAWKEYERPParams;
 
@@ -48,10 +50,6 @@ class HAWKEYERP : public BaseReplacementPolicy
         /** Tick on which the entry was last touched. */
         unsigned rrip;
   
-        bool OPT_decision;
-
-        bool firstAccess;
-        
         bool cacheFriendly;
 
         Addr hashedPC;
@@ -59,9 +57,9 @@ class HAWKEYERP : public BaseReplacementPolicy
         /**
          * Default constructor. Invalidate data.
          */
-        HAWKEYEReplData() : rrip(7), OPT_decision(false), firstAccess(false), 
-                            cacheFriendly(false), hashedPC(0) {}
+        HAWKEYEReplData() : rrip(7), cacheFriendly(false), hashedPC(0) {}
     };
+    
 
   public:
     /** Convenience typedef. */
@@ -86,7 +84,7 @@ class HAWKEYERP : public BaseReplacementPolicy
 
     //Addr AccessHistory[2048][8*16]; 
     //unsigned OccupancyVector[2048][8*16]; 
-    //unsigned head_ptr[2048];    
+    //unsigned head_ptr[2048]; 
 
     /**
      * Invalidate replacement data to set it as the next probable victim.
@@ -106,8 +104,8 @@ class HAWKEYERP : public BaseReplacementPolicy
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                     override;
     // RE
-    void update_predictor(Addr addr) const override;
-    void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+    unsigned update_predictor(Addr addr) const override;
+    bool predict(const std::shared_ptr<ReplacementData>& replacement_data, 
 							Addr addr) const override;
     /**
      * Reset replacement data. Used when an entry is inserted.
@@ -126,6 +124,10 @@ class HAWKEYERP : public BaseReplacementPolicy
      */
     ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
                                                                      override;
+    
+    void age(const ReplacementCandidates& candidates) const override;
+    bool victim_check(const std::shared_ptr<ReplacementData>& replacement_data)
+                                                                const override;
 
     /**
      * Instantiate a replacement data entry.
@@ -133,6 +135,7 @@ class HAWKEYERP : public BaseReplacementPolicy
      * @return A shared pointer to the new replacement data.
      */
     std::shared_ptr<ReplacementData> instantiateEntry() override;
+
 };
 
 #endif // __MEM_CACHE_REPLACEMENT_POLICIES_HAWKEYE_RP_HH__

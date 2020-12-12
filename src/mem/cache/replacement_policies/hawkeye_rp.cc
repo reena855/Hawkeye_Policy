@@ -34,7 +34,7 @@
 
 #include "debug/CacheRepl.hh"
 #include "params/HAWKEYERP.hh"
-
+#include "sim/stats.hh"
 
 // L3 data
 // Size: 2MB=2*1024*1024B, assoc: 16, Block-size: 64B
@@ -49,20 +49,151 @@ uint32_t numSets=2048;
 const unsigned setMask = numSets-1;
 const int setShift = 6; // Block Offset
 const int tagShift = 17; 
+const int PCMapSize = 8*1024;
 
 unsigned head_ptr[2048];
 Addr AccessHistory[2048][128]; // 128 = 16*8
 unsigned OccupancyVector[2048][128];
 unsigned HawkeyePredictor[8*1024];
 
-// L3 specific derived-params
+
+//static uint64_t
+//CRC(uint64_t addr) {
+//
+//    unsigned long long crcPolynomial = 3988292384ULL;  //Decimal value for 0xEDB88320 hex value
+//    unsigned long long result = addr;
+//    for(unsigned int i = 0; i < 32; i++ ) {
+//    	if((result & 1 ) == 1 ){
+//    		result = (result >> 1) ^ crcPolynomial;
+//    	}
+//    	else{
+//    		result >>= 1;
+//    	}
+//    }
+//
+//    return result;
+//}
+
+unsigned
+OPTgen(uint64_t addr) {
+
+// extract tag and set 
+
+    Addr tag = addr >> tagShift; 
+
+    uint32_t set = (addr >> setShift) & setMask;
+
+    fatal_if(set>2047, "# of sets must be less than 2048");
+    fatal_if(tag>32767, "# of tags must be less than 2^15");
+
+    DPRINTF(CacheRepl, "HAWKEYE RP: Update Predictor: Addr:  %s," 
+    " Tag: %s, Set: %s\n", addr, tag, set);
+// OPTGen
+// AccessHistory[set][entries]
+// OccupancyVector[set][entries]
+  
+    AccessHistory[set][head_ptr[set]] = tag;
+    OccupancyVector[set][head_ptr[set]] = 1;
+    
+    // check if this is the first access
+    unsigned match_index = 0;
+
+    bool repeatAccess = false;
+    bool OPT_decision = false;
+    bool full = false;
+
+    // Check the recent history
+    for (int i=head_ptr[set]-1; i>=0; i--){
+	if (AccessHistory[set][i] == tag){
+             repeatAccess = true;
+             match_index = i;
+             break;
+        }
+    }
+    
+    // if previous access exists, update occupancy vector
+    if (repeatAccess) {
+        for (int i = match_index; i < head_ptr[set]; i++) {
+            if (OccupancyVector[set][i] == 16) {
+                full = true;
+            }
+        }
+
+        if (!full) {
+            OPT_decision = true;
+            for (int i = match_index; i < head_ptr[set]; i++) {
+	        OccupancyVector[set][i]++;
+            }
+        }
+    }    
+
+    // if no match, search older history
+    else {
+        for (int i=127; i>head_ptr[set]; i--){
+	    if (AccessHistory[set][i] == tag){
+                 repeatAccess = true;
+                 match_index = i;
+                 break;
+            }
+        }
+        if (repeatAccess) {
+            for (int i = match_index; i < 128; i++) {
+                if (OccupancyVector[set][i] == 16) {
+                    full = true;
+                }
+            }
+            
+            for (int i = 0; i < head_ptr[set]; i++) {
+                if (OccupancyVector[set][i] == 16) {
+                    full = true;
+                }
+            }
+
+            if (!full) {
+                OPT_decision = true;
+                for (int i = match_index; i < 128; i++) {
+                    OccupancyVector[set][i]++;
+                }
+                for (int i = 0; i < head_ptr[set]; i++) {
+                    OccupancyVector[set][i]++;
+                }
+            }
+        }    
+    }
+    
+    head_ptr[set]++;
+    if (head_ptr[set] == 128) head_ptr[set] = 0; 
+    
+    unsigned OPT_hit;
+    
+    if (repeatAccess && OPT_decision) { // OPT hit 
+        OPT_hit = 1; 
+    }
+
+    else if (repeatAccess && !OPT_decision){ // OPT miss
+        OPT_hit = 0;
+    }
+ 
+    else {
+        OPT_hit = 2;
+    }
+    
+    DPRINTF(CacheRepl, "HAWKEYE OPTgen: prediction: %s," 
+    " Tag: %s, Set: %s\n", OPT_hit, tag, set);
+
+    return OPT_hit;
+
+}
+
+
+
 
 
 
 HAWKEYERP::HAWKEYERP(const Params *p)
     : BaseReplacementPolicy(p)
 {
-
+   
 }
 
 void
@@ -92,142 +223,55 @@ HAWKEYERP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
         casted_replacement_data->rrip = 7;
     }
 
-    DPRINTF(CacheRepl, "HAWKEYE RP: Setting RRIP: %s\n",
+    DPRINTF(CacheRepl, "HAWKEYE TOUCH: Setting RRIP: %s\n",
 		casted_replacement_data->rrip);
 
 }
 
 
-void 
+unsigned 
 HAWKEYERP::update_predictor(Addr addr) const
 {
 
-// extract tag and set 
 
-    Addr tag = addr >> tagShift; 
+// OPTgen
 
-    uint32_t set = (addr >> setShift) & setMask;
+    unsigned OPT_hit;
 
-    fatal_if(set>2047, "# of sets must be less than 2048");
-    fatal_if(tag>32767, "# of tags must be less than 2^15");
-
-// Casting
-
-
-//    std::shared_ptr<HAWKEYEReplData> casted_replacement_data =
-//        std::static_pointer_cast<HAWKEYEReplData>(replacement_data);
-
-// OPTGen
-// AccessHistory[set][way]
-// OccupancyVector[set][way]
-  
-  
-    AccessHistory[set][head_ptr[set]] = tag;
-    OccupancyVector[set][head_ptr[set]] = 0;
-    
-    // check if this is the first access
-    unsigned match_index = 0;
-
-    bool repeatAccess = false;
-    bool OPT_decision = false;
-    bool full = false;
-
-    // Check the recent history
-    for (int i=head_ptr[set]-1; i>=0; i--){
-	if (AccessHistory[set][i] == tag){
-             repeatAccess = true;
-             match_index = i;
-        }
-    }
-    
-    // if previous access exists, update occupancy vector
-    if (repeatAccess) {
-        for (int i = match_index+1; i < head_ptr[set]; i++) {
-            if (OccupancyVector[set][i] == 15) {
-                full = true;
-            }
-        }
-
-        if (!full) {
-            OPT_decision = true;
-            for (int i = match_index+1; i < head_ptr[set]; i++) {
-	        OccupancyVector[set][i]++;
-            }
-        }
-    }    
-
-    // if no match, search older history
-    else {
-        for (int i=127; i>head_ptr[set]; i--){
-	    if (AccessHistory[set][i] == tag){
-                 repeatAccess = true;
-                 match_index = i;
-            }
-        }
-        if (repeatAccess) {
-            for (int i = match_index+1; i < 128; i++) {
-                if (OccupancyVector[set][i] == 15) {
-                    full = true;
-                }
-            }
-            
-            for (int i = 0; i < head_ptr[set]; i++) {
-                if (OccupancyVector[set][i] == 15) {
-                    full = true;
-                }
-            }
-
-            if (!full) {
-                OPT_decision = true;
-                for (int i = match_index+1; i < 128; i++) {
-                    OccupancyVector[set][i]++;
-                }
-                for (int i = 0; i < head_ptr[set]; i++) {
-                    OccupancyVector[set][i]++;
-                }
-            }
-        }    
-    }
-    
-    head_ptr[set]++;
-    if (head_ptr[set] == 128) head_ptr[set] = 0; 
-    
-    DPRINTF(CacheRepl, "HAWKEYE RP: OPTgen hit prediction: %s\n", OPT_decision);
- 
+    OPT_hit = OPTgen(addr);
 
 // Hawkeye predictor
-// num entries: 8*1024
-// indexed by 13-bit hashed PC
 
-    const int hashedPCShift = 19;
-    Addr hashedPC = addr >> hashedPCShift;
+    Addr hashedPC = addr % PCMapSize;
+    fatal_if(hashedPC>8191, "# of sets must be less than 8*1024");
 
-    if (repeatAccess && OPT_decision) { // OPT hit 
+    if (OPT_hit == 1) { // OPT hit
         if (HawkeyePredictor[hashedPC] < 7) {
             HawkeyePredictor[hashedPC]++; // only 3 bits
         }
     }
 
-    else if (repeatAccess && !OPT_decision) { // OPT miss
+    else if (OPT_hit == 0) { // OPT miss
         if (HawkeyePredictor[hashedPC] != 0) {
             HawkeyePredictor[hashedPC]--; // never below 0
         }
     }
+    
+    DPRINTF(CacheRepl, "HAWKEYE Update Predictor: Hawkeye PC Map Val: %s," 
+    " at hashedPC: %s\n", HawkeyePredictor[hashedPC], hashedPC);
+
+    return OPT_hit;
 };
 
 
-void 
+bool 
 HAWKEYERP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
-// extract hashedPC 
+// extract hashedPC
 
-    const int hashedPCShift = 19;
-    Addr hashedPC = addr >> hashedPCShift;
+    Addr hashedPC = addr % PCMapSize;
     fatal_if(hashedPC>8191, "# of sets must be less than 8*1024");
-
-
-// Casting
 
 
     std::shared_ptr<HAWKEYEReplData> casted_replacement_data =
@@ -245,9 +289,11 @@ HAWKEYERP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Add
         casted_replacement_data->cacheFriendly = false;
     }
 
-    DPRINTF(CacheRepl, "HAWKEYE RP: Hawkeye cacheFriendly prediction: %s"
-              "for hasedPC %s\n", casted_replacement_data->cacheFriendly, 
+    DPRINTF(CacheRepl, "HAWKEYE predict: Hawkeye cacheFriendly prediction: %s"
+              " for hashedPC %s\n", casted_replacement_data->cacheFriendly, 
                   casted_replacement_data->hashedPC);
+
+    return casted_replacement_data->cacheFriendly;
 
 };
 
@@ -267,8 +313,8 @@ HAWKEYERP::reset(const std::shared_ptr<ReplacementData>& replacement_data) const
     }
 
 
-    DPRINTF(CacheRepl, "HAWKEYE RP: Inserting Victim, cacheFriendly prediction: %s"
-		"RRIP: %s\n", casted_replacement_data->cacheFriendly, 
+    DPRINTF(CacheRepl, "HAWKEYE RESET: Inserting Victim, cacheFriendly prediction: %s"
+		" RRIP: %s\n", casted_replacement_data->cacheFriendly, 
 		casted_replacement_data->rrip);
 
 }
@@ -292,44 +338,50 @@ HAWKEYERP::getVictim(const ReplacementCandidates& candidates) const
             victim = candidate;
         }
     }
-
-
-                    
-
-    if (std::static_pointer_cast<HAWKEYEReplData>(
-             victim->replacementData)->cacheFriendly) { // cache friendly block evicted
-    
-
-        DPRINTF(CacheRepl, "HAWKEYE RP: Victim %s was predicted cacheFriendly,"
-		"updating HP entry at hashed PC %s", victim, 
-		HawkeyePredictor[std::static_pointer_cast<HAWKEYEReplData>(
-                  victim->replacementData)->hashedPC]);
-
-        if (HawkeyePredictor[std::static_pointer_cast<HAWKEYEReplData>(
-                  victim->replacementData)->hashedPC] != 0) {
-            HawkeyePredictor[std::static_pointer_cast<HAWKEYEReplData>(
-                  victim->replacementData)->hashedPC]--;
-        }
-    }
-
-    // Age all the cache_friendly lines
-    // The new line will be inserted later
-    for (const auto& candidate : candidates) {
-    
-        if (std::static_pointer_cast<HAWKEYEReplData>(
-                 candidate->replacementData)->cacheFriendly) {
-
-		if (std::static_pointer_cast<HAWKEYEReplData>(
-                         candidate->replacementData)->rrip < 6) {
-			
-			std::static_pointer_cast<HAWKEYEReplData>(
-                           candidate->replacementData)->rrip++;
-		}
-        }
-    }
-
-
     return victim;
+}
+
+void
+HAWKEYERP::age(const ReplacementCandidates& candidates) const
+{                    
+     // There must be at least one replacement candidate
+     assert(candidates.size() > 0);
+     for (const auto& candidate : candidates) {
+         
+         if (std::static_pointer_cast<HAWKEYEReplData>(
+                  candidate->replacementData)->cacheFriendly) {
+
+         	if (std::static_pointer_cast<HAWKEYEReplData>(
+                          candidate->replacementData)->rrip < 6) {
+         		
+         		std::static_pointer_cast<HAWKEYEReplData>(
+                            candidate->replacementData)->rrip++;
+         	}
+         }
+     }
+}
+
+   	
+bool
+HAWKEYERP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    std::shared_ptr<HAWKEYEReplData> casted_replacement_data =
+        std::static_pointer_cast<HAWKEYEReplData>(replacement_data);
+
+    if (casted_replacement_data->cacheFriendly) { // cache friendly block evicted
+    
+
+        DPRINTF(CacheRepl, "HAWKEYE getVictim: Victim predicted cacheFriendly,"
+		" updating HP entry at hashed PC %s", 
+		        casted_replacement_data->hashedPC);
+
+
+        if (HawkeyePredictor[casted_replacement_data->hashedPC] != 0) {
+            HawkeyePredictor[casted_replacement_data->hashedPC]--;
+        }
+     }
+
+    return casted_replacement_data->cacheFriendly;
 }
 
 std::shared_ptr<ReplacementData>
@@ -344,11 +396,14 @@ HAWKEYERP::instantiateEntry()
     }
 
     for (int i=0; i<8*1024; i++) {
-        HawkeyePredictor[i] = 0;
+        HawkeyePredictor[i] = 4;
     }
 
     return std::shared_ptr<ReplacementData>(new HAWKEYEReplData());
 }
+
+
+
 
 HAWKEYERP*
 HAWKEYERPParams::create()

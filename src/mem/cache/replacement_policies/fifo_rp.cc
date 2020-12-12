@@ -53,20 +53,33 @@ FIFORP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     // A touch does not modify the insertion tick
 }
 
-void 
+unsigned 
 FIFORP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 FIFORP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
+return false;
+}
 
+void
+FIFORP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+FIFORP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
 }
 
 

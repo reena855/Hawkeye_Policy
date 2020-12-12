@@ -66,21 +66,37 @@ WeightedLRUPolicy::touch(const std::shared_ptr<ReplacementData>&
                                                   last_occ_ptr = occupancy;
 }
 
-void 
+unsigned 
 WeightedLRUPolicy::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 WeightedLRUPolicy::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
-
+return false;
 }
+
+
+void
+WeightedLRUPolicy::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+WeightedLRUPolicy::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
+}
+
+
 
 ReplaceableEntry*
 WeightedLRUPolicy::getVictim(const ReplacementCandidates& candidates) const

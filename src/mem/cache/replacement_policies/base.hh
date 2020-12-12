@@ -78,8 +78,8 @@ class BaseReplacementPolicy : public SimObject
                                                 replacement_data) const = 0;
 
     // RE
-    virtual void update_predictor(Addr addr) const = 0;
-    virtual void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+    virtual unsigned update_predictor(Addr addr) const = 0;
+    virtual bool predict(const std::shared_ptr<ReplacementData>& replacement_data, 
 							Addr addr) const = 0;
     /**
      * Reset replacement data. Used when it's holder is inserted/validated.
@@ -97,6 +97,9 @@ class BaseReplacementPolicy : public SimObject
      */
     virtual ReplaceableEntry* getVictim(
                            const ReplacementCandidates& candidates) const = 0;
+    virtual void age(const ReplacementCandidates& candidates) const = 0;
+    virtual bool victim_check(const std::shared_ptr<ReplacementData>& replacement_data)
+                                                                const = 0;
 
     /**
      * Instantiate a replacement data entry.

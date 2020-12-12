@@ -70,20 +70,33 @@ BRRIPRP::touch(const std::shared_ptr<ReplacementData>& replacement_data) const
     }
 }
 
-void 
+unsigned 
 BRRIPRP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 BRRIPRP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
+return false;
+}
 
+void
+BRRIPRP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+BRRIPRP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
 }
 
 void

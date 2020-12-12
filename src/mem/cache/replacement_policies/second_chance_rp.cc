@@ -70,22 +70,34 @@ SecondChanceRP::touch(const std::shared_ptr<ReplacementData>&
         replacement_data)->hasSecondChance = true;
 }
 
-void 
+unsigned 
 SecondChanceRP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+bool
 SecondChanceRP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
-
+return false;
 }
 
+void
+SecondChanceRP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+SecondChanceRP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
+}
 
 void
 SecondChanceRP::reset(const std::shared_ptr<ReplacementData>&

@@ -180,8 +180,8 @@ class TreePLRURP : public BaseReplacementPolicy
     void touch(const std::shared_ptr<ReplacementData>& replacement_data) const
                                                                      override;
 
-    void update_predictor(Addr addr) const override;
-    void predict(const std::shared_ptr<ReplacementData>& replacement_data, 
+    unsigned update_predictor(Addr addr) const override;
+    bool predict(const std::shared_ptr<ReplacementData>& replacement_data, 
 							Addr addr) const override;
     /**
      * Reset replacement data. Used when an entry is inserted. Provides the
@@ -202,6 +202,9 @@ class TreePLRURP : public BaseReplacementPolicy
     ReplaceableEntry* getVictim(const ReplacementCandidates& candidates) const
                                                                      override;
 
+    void age(const ReplacementCandidates& candidates) const override;
+    bool victim_check(const std::shared_ptr<ReplacementData>& replacement_data)
+                                                                const override;
     /**
      * Instantiate a replacement data entry. Consecutive calls to this
      * function use the same tree up to numLeaves. When numLeaves replacement

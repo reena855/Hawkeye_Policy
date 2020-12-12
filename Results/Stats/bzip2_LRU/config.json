@@ -1678,7 +1678,7 @@
                         "maxStackSize": 67108864, 
                         "ppid": 0, 
                         "type": "Process", 
-                        "cwd": "/home/consus/a/elangovr/CourseWork/ECE565/Project/gem5", 
+                        "cwd": "/home/consus/a/elangovr/CourseWork/ECE565/Project/gem5_parallel", 
                         "pgid": 100, 
                         "simpoint": 0, 
                         "euid": 100, 
@@ -1738,7 +1738,7 @@
                     "size": 64
                 }, 
                 "simpoint_start_insts": [], 
-                "max_insts_any_thread": 1000000000, 
+                "max_insts_any_thread": 1, 
                 "simulate_inst_stalls": false, 
                 "progress_interval": 0, 
                 "branchPred": null, 

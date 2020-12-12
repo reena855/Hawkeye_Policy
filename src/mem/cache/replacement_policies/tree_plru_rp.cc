@@ -155,23 +155,36 @@ const
     } while (tree_index != 0);
 }
 
-void 
+unsigned 
 TreePLRURP::update_predictor(Addr addr) const
 {
 
 // Do Nothing  
-
+return 3;
 }
 
-void
+
+bool
 TreePLRURP::predict(const std::shared_ptr<ReplacementData>& replacement_data, Addr addr) const
 {
 
 // Do Nothing  
-
+return false;
 }
 
 
+void
+TreePLRURP::age(const ReplacementCandidates& candidates) const
+{                    
+// Do Nothing
+}
+
+   	
+bool
+TreePLRURP::victim_check(const std::shared_ptr<ReplacementData>& replacement_data) const
+{
+    return false;
+}
 
 
 void

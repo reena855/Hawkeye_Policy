@@ -152,6 +152,15 @@ class BaseTags : public ClockedObject
         Stats::Scalar tagAccesses;
         /** Number of data blocks consulted over all accesses. */
         Stats::Scalar dataAccesses;
+
+        Stats::Scalar cacheFriendly;
+        Stats::Scalar cacheAverse;
+        Stats::Scalar victim_cacheFriendly;
+        Stats::Scalar victim_cacheAverse;
+        Stats::Scalar OPT_hit;
+        Stats::Scalar OPT_miss;
+        Stats::Scalar OPT_nan;
+
     } stats;
 
   public:

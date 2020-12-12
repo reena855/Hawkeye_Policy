@@ -224,7 +224,14 @@ BaseTags::BaseTagStats::BaseTagStats(BaseTags &_tags)
     percentOccsTaskId(this, "occ_task_id_percent",
                       "Percentage of cache occupancy per task id"),
     tagAccesses(this, "tag_accesses", "Number of tag accesses"),
-    dataAccesses(this, "data_accesses", "Number of data accesses")
+    dataAccesses(this, "data_accesses", "Number of data accesses"),
+    cacheFriendly(this, "cache_friendly", "Number of cache friendly accesses"),
+    cacheAverse(this, "cache_averse", "Number of cache averse accesses"),
+    victim_cacheFriendly(this, "cache_friendly_victims", "Number of cache friendly victims"),
+    victim_cacheAverse(this, "cache_averse_victims", "Number of cache averse victims"),
+    OPT_hit(this, "OPT_hits", "Number of OPT hits"),
+    OPT_miss(this, "OPT_misses", "Number of OPT misses"),
+    OPT_nan(this, "OPT_nan", "Number of OPT nan")
 {
 }
 
